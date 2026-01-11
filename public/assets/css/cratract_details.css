@@ -1,0 +1,403 @@
+    /* Container for the entire contract view */
+    .contract-view-container {
+        padding: 20px;
+        max-width: 1400px;
+        margin: auto;
+    }
+
+    /* Top header area */
+    .contract-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .contract-header h1 {
+        font-size: 1.5rem;
+        font-weight: 400;
+        color: #343a40;
+        margin-bottom: 5px;
+    }
+
+    .contract-header .store-info {
+        font-size: 0.75rem;
+        color: #6c757d;
+        margin-bottom: 10px;
+    }
+
+    .contract-header .badge {
+        font-size: 0.7rem;
+        padding: 0.3em 0.6em;
+        border-radius: 0.25rem;
+        background-color: #dee2e6;
+        color: #6c757d;
+        font-weight: normal;
+    }
+
+    /* Main two-column layout */
+    .contract-details-grid {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .left-column {
+        flex: 1;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 1px 3px rgba(0, 0, 0, .2);
+        padding: 20px;
+    }
+
+    .right-column {
+        flex: 1;
+        background-color: #2d5073;
+        color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 1px 3px rgba(0, 0, 0, .2);
+        padding: 20px;
+    }
+
+    /* Section styling within columns */
+    .section-block {
+        margin-bottom: 20px;
+    }
+
+    .section-block:last-child {
+        margin-bottom: 0;
+    }
+
+    /* Left Column Specifics */
+    .customer-info-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .customer-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background-color: #e9ecef;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.2rem;
+        color: #adb5bd;
+        margin-right: 12px;
+    }
+
+    .customer-name {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: #343a40;
+    }
+
+    .info-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .info-list li {
+        width: 100%;
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 12px;
+        font-size: 0.8rem;
+        color: #343a40;
+        position: relative;
+        align-items: center;
+    }
+
+    .info-list li i {
+        color: #6c757d;
+        margin-right: 8px;
+        width: 14px;
+        text-align: center;
+        font-size: 0.75rem;
+    }
+
+    .info-list li .info-label {
+        font-weight: 600;
+        margin-right: 5px;
+        font-size: 0.8rem;
+    }
+
+    .info-list li .info-value {
+        color: #6c757d;
+        font-size: 0.8rem;
+    }
+
+    .info-list.full-width li {
+        width: 100%;
+    }
+
+    .info-list.device-details li {
+        align-items: baseline;
+    }
+
+    .info-list.device-details li .info-value {
+        font-weight: bold;
+        color: #343a40;
+    }
+
+    /* Edit icon styling */
+    .editable-field {
+        position: relative;
+        padding-right: 20px;
+    }
+
+    .edit-icon {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #007bff;
+        cursor: pointer;
+        font-size: 0.7rem;
+        opacity: 0.6;
+        transition: opacity 0.2s ease;
+    }
+
+    .edit-icon:hover {
+        opacity: 1;
+    }
+
+    /* Specific styles for "Active - Unlocked" */
+    .status-active-unlocked {
+        color: #28a745 !important;
+        font-weight: bold;
+    }
+
+    .date-text {
+        color: #007bff;
+        font-size: 0.75rem;
+    }
+
+    /* Section dividers */
+    .section-divider {
+        border-top: 1px solid #eee;
+        margin: 20px 0;
+    }
+
+    .left-column .action-buttons {
+        display: flex;
+        gap: 8px;
+        margin-top: 20px;
+    }
+
+    .left-column .action-buttons .btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+
+    /* Right Column Specifics (Billing Info) */
+    .billing-title {
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin-bottom: 15px;
+        color: #fff;
+    }
+
+    .billing-status {
+        text-align: right;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #fff;
+    }
+
+    .billing-details-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px 15px;
+        margin-bottom: 20px;
+    }
+
+    .billing-details-grid .label {
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .billing-details-grid .value {
+        font-size: 0.75rem;
+        color: #fff;
+        text-align: right;
+        font-weight: 500;
+    }
+
+    .billing-details-grid .full-width-line {
+        grid-column: 1 / -1;
+        height: 1px;
+        background-color: rgba(255, 255, 255, 0.3);
+        margin: 3px 0;
+    }
+
+    .billing-details-grid .highlight-value {
+        font-size: 0.9rem;
+        font-weight: bold;
+    }
+
+    /* Tabs Styling */
+    .contract-tabs {
+        background: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 1px 3px rgba(0, 0, 0, .2);
+        margin-bottom: 20px;
+    }
+
+    .contract-tabs .nav-tabs {
+        border-bottom: 1px solid #dee2e6;
+        padding: 0 20px;
+    }
+
+    .contract-tabs .nav-tabs .nav-link {
+        border: none;
+        color: #6c757d;
+        font-size: 0.85rem;
+        font-weight: 500;
+        padding: 12px 20px;
+        margin-bottom: -1px;
+    }
+
+    .contract-tabs .nav-tabs .nav-link:hover {
+        border: none;
+        color: #007bff;
+    }
+
+    .contract-tabs .nav-tabs .nav-link.active {
+        color: #007bff;
+        background: transparent;
+        border: none;
+        border-bottom: 2px solid #007bff;
+    }
+
+    .tab-content {
+        padding: 20px;
+    }
+
+    /* Tab Specific Styles */
+    .activities-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .activities-title {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .activities-actions {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .activities-actions i {
+        font-size: 1.1rem;
+        color: #6c757d;
+        cursor: pointer;
+    }
+
+    /* Edit Modal Styling */
+    .edit-modal .modal-header {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .edit-modal .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .edit-modal .form-control {
+        font-size: 0.85rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .edit-modal .form-label {
+        font-weight: 600;
+        font-size: 0.85rem;
+        margin-bottom: 0.3rem;
+    }
+
+    .image-upload-box {
+        border: 2px dashed #ced4da;
+        border-radius: 12px;
+        height: 160px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .image-upload-box:hover {
+        border-color: #007bff;
+        background-color: #f1f5fb;
+    }
+
+    .image-upload-box i {
+        font-size: 3rem;
+        color: #6c757d;
+    }
+
+    .image-upload-label {
+        margin-top: 10px;
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    .preview-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+
+
+    /* Modal form row */
+    .form-group {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    /* Label styling */
+    .form-group label {
+        flex: 1;
+        margin: 0;
+        font-weight: 500;
+    }
+
+    /* Input styling */
+    .form-group input.form-control {
+        flex: 1;
+        border: none;
+        border-bottom: 2px solid #ccc;
+        border-radius: 0;
+        padding: 0.25rem 0.5rem;
+        text-align: right;
+        background-color: transparent;
+        transition: border-color 0.3s;
+    }
+
+    .form-group input.form-control:focus {
+        outline: none;
+        border-bottom-color: #007bff;
+        /* Bootstrap primary color */
+        box-shadow: none;
+    }
+
+    /* Alert spacing */
+    .alert-info {
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+    }
+

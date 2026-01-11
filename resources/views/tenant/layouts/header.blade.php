@@ -1,0 +1,90 @@
+<!-- Navbar -->
+<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="{{ route('home') }}" target="_blank" class="nav-link">
+                <i class="fas fa-globe fa-2"></i>
+            </a>
+        </li>
+        <!-- <li class="nav-item d-none d-sm-inline-block">
+            <a href="{{ route('admin.cacheClear') }}" class="nav-link">
+                <i class="fas fa-broom"></i>
+            </a>
+        </li> -->
+    </ul>
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+        {{-- <li class="nav-item">
+            <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                <i class="fas fa-expand-arrows-alt"></i>
+            </a>
+        </li> --}}
+
+
+        <!-- Site Selector Dropdown -->
+        @php
+            $currentStore = app('currentStore');
+            $currentStoreId = $currentStore->id;
+            $tenant = app('currentTenant');
+            $stores = $tenant->stores()->select('id', 'store_name')->get();
+        @endphp
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" id="siteDropdown" role="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-globe text-white"></i>
+                <span class="d-none d-sm-inline text-white">
+                    {{ $currentStore->store_name }}
+                </span>
+            </a>
+
+            <div class="dropdown-menu dropdown-menu-right shadow bg-dark" aria-labelledby="siteDropdown">
+
+
+                @foreach ($stores as $store)
+                    <a class="dropdown-item text-white {{ $currentStoreId == $store->id ? 'active' : '' }}"
+                        href="{{ tenant_route('tenant.switch.store', ['store' => $store->id]) }}">
+                        <i class="fas fa-building text-light mr-2"></i> {{$store->store_name}}
+                        @if($currentStoreId == $store->id)
+                            <i class="fas fa-check ml-2 text-success"></i>
+                        @endif
+                    </a>
+                @endforeach
+
+
+
+            </div>
+        </li>
+
+
+
+
+        <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="#">
+                <span class="image">
+                    <img src="{{ getProfile(Auth::user()->image) }}" alt="{{ auth::user()->name }}"
+                        class="rounded shadow-sm" width="30">
+                </span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-md dropdown-menu-right">
+                <!-- <a href="{{ route('admin.profile') }}" class="dropdown-item"><i class="fa fa-user"
+                        aria-hidden="true"></i> {{__('messages.common.profile')}}</a>
+                <div class="dropdown-divider"></div> -->
+                <a href="{{ route('logout') }}" class="dropdown-item text-danger"
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i
+                        class="fa fa-sign-out" aria-hidden="true"></i> {{__('messages.common.logout')}}</a>
+                <form class="logout" id="logout-form" action="{{ route('logout') }}" method="POST">
+                    @csrf
+                </form>
+            </div>
+        </li>
+
+
+    </ul>
+</nav>
+<!-- /.navbar -->
