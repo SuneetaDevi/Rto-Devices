@@ -320,7 +320,7 @@
 
             sessionStorage.setItem('provisioningDevices', JSON.stringify(devices));
             // window.location.href = '/provisioning/verify';
-            alert('Redirecting to verification page...');
+            window.location.href = "{{ tenant_route('tenant.device.verify', ['batch' => '__BATCH__']) }}".replace('__BATCH__', batchId);
         });
 
         window.addEventListener('load', function () {

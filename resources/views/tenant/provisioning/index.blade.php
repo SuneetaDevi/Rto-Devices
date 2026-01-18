@@ -250,90 +250,7 @@
 @endpush
 
 @section('content')
-    @php
-        $batches = [
-            [
-                'id' => '16SC167D',
-                'status' => 'Pending Initial Verification',
-                'status_class' => 'pending',
-                'manufacturer' => 'APPLE',
-                'model' => 'IPHONE 15, 4',
-                'imei' => '357702054466638',
-                'serial' => 'K2RWLF9075',
-                'store' => 'Site 1',
-                'user' => 'HYESESANL SHYQYRI',
-                'date' => '07/27/2025',
-                'time' => '02:02:21 PM',
-            ],
-            [
-                'id' => 'F2DF00F2',
-                'status' => 'Device Provisioned',
-                'status_class' => 'provisioned',
-                'manufacturer' => 'SAMSUNG',
-                'model' => 'GALAXY S24 ULTRA',
-                'imei' => '3529990828100382',
-                'serial' => 'RSCX2221JLR',
-                'store' => 'Site 1',
-                'user' => 'HYESESANL SHYQYRI',
-                'date' => '07/26/2025',
-                'time' => '04:41:30 PM',
-            ],
-            [
-                'id' => 'ASC5074B',
-                'status' => 'Device Provisioned',
-                'status_class' => 'provisioned',
-                'manufacturer' => 'APPLE',
-                'model' => 'IPHONE 16 Pro Max',
-                'imei' => '358637762733638',
-                'serial' => 'MYD94FRO6YC',
-                'store' => 'Site 1',
-                'user' => 'HYESESANL SHYQYRI',
-                'date' => '07/21/2025',
-                'time' => '05:37:47 PM',
-            ],
-            [
-                'id' => 'DDA272B1',
-                'status' => 'Device Provisioned',
-                'status_class' => 'provisioned',
-                'manufacturer' => 'APPLE',
-                'model' => 'IPHONE 16',
-                'imei' => '351280059612254',
-                'serial' => 'M43XMVM711',
-                'store' => 'Site 1',
-                'user' => 'HYESESANL SHYQYRI',
-                'date' => '07/19/2025',
-                'time' => '10:26:29 AM',
-            ],
-            [
-                'id' => 'X1C234D5',
-                'status' => 'Pending Initial Verification',
-                'status_class' => 'pending',
-                'manufacturer' => 'GOOGLE',
-                'model' => 'PIXEL 8 PRO',
-                'imei' => '358901234567890',
-                'serial' => 'GPX8P123456',
-                'store' => 'Site 1',
-                'user' => 'HYESESANL SHYQYRI',
-                'date' => '07/28/2025',
-                'time' => '09:15:30 AM',
-            ],
-        ];
-
-        $stats = [
-            'total' => count($batches),
-            'pending' => count(
-                array_filter($batches, function ($batch) {
-                    return $batch['status_class'] === 'pending';
-                }),
-            ),
-            'provisioned' => count(
-                array_filter($batches, function ($batch) {
-                    return $batch['status_class'] === 'provisioned';
-                }),
-            ),
-            'failed' => 0,
-        ];
-    @endphp
+    
 
     <div class="content-wrapper">
         <div class="content">
@@ -415,25 +332,26 @@
                                     @foreach ($batches as $batch)
                                         <tr>
                                             <td class="text-center">
-                                                <a href="#" onclick="viewBatch('{{ $batch['id'] }}')"
+                                                <a href="#" onclick="viewBatch('{{ $batch['id'] ?? 'N/A' }}')"
                                                     class="action-btn" title="View Details">
                                                     <i class="far fa-eye"></i>
                                                 </a>
                                             </td>
-                                            <td><strong>{{ $batch['id'] }}</strong></td>
+                                            <td><strong>{{ $batch['id'] ?? 'N/A' }}</strong></td>
                                             <td>
-                                                <span class="status-badge status-{{ $batch['status_class'] }}">
-                                                    {{ $batch['status'] }}
+                                                <span class="status-badge status-{{ strtolower($batch['status'] ?? 'unknown') }}">
+                                                    {{ $batch['status'] ?? 'N/A' }}
                                                 </span>
                                             </td>
-                                            <td>{{ $batch['manufacturer'] }}</td>
-                                            <td>{{ $batch['model'] }}</td>
-                                            <td>{{ $batch['imei'] }}</td>
-                                            <td>{{ $batch['serial'] }}</td>
-                                            <td>{{ $batch['store'] }}</td>
-                                            <td>{{ $batch['user'] }}</td>
-                                            <td>{{ $batch['date'] }}</td>
-                                            <td>{{ $batch['time'] }}</td>
+                                            <td>{{ $batch['manufacturer'] ?? 'N/A' }}</td>
+                                            <td>{{ $batch['model'] ?? 'N/A' }}</td>
+                                            <td>{{ $batch['imei'] ?? 'N/A' }}</td>
+                                            <td>{{ $batch['serial'] ?? 'N/A' }}</td>
+                                            <td>{{ $batch['store'] ?? 'N/A' }}</td>
+                                            <td>{{ $batch['user_name'] ?? 'N/A' }}</td>
+                                            <td>{{ $batch['date'] ?? 'N/A' }}</td>
+                                            <td>{{ $batch['time'] ?? 'N/A' }}</td>
+                                            
                                         </tr>
                                     @endforeach
                                 </tbody>

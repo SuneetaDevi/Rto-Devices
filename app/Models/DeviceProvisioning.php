@@ -8,9 +8,12 @@ class DeviceProvisioning extends Model
 {
     protected $table = 'device_provisioning';
 
+    public $timestamps = false;
+
     protected $fillable = [
         'batch_id',
         'status',
+        'device_type',
         'status_class',
         'manufacturer',
         'model',

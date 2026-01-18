@@ -30,6 +30,7 @@ Route::prefix('shop/{tenant_domain}')->group(function () {
         Route::get('/training', [CoreController::class, 'training'])->name('tenant.training');
         Route::get('/provisioning', [CoreController::class, 'deviceProvisioning'])->name('tenant.device-provisioning');
         Route::get('/provisioning/create', [CoreController::class, 'deviceProvisioningCreate'])->name('tenant.device-provisioning.create');
+        Route::post('/provisioning/verify/{batch}', [CoreController::class, 'verifyProvisionedDevice'])->name('tenant.device.verify');
         Route::post('/provisioning/store', [CoreController::class, 'deviceProvisioningStore'])->name('tenant.device-provisioning.store');
         Route::get('/referral', [CoreController::class, 'referral'])->name('tenant.referral');
         Route::get('/resources', [CoreController::class, 'resources'])->name('tenant.resources');

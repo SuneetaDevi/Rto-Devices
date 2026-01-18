@@ -7,6 +7,7 @@ use App\Models\TenantStore;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\DeviceProvisioning;
+use Illuminate\Support\Facades\DB;
 
 class CoreController extends Controller
 {
@@ -144,7 +145,56 @@ class CoreController extends Controller
     public function deviceProvisioning()
     {
         $title = "Device Provisioning";
-        return view('tenant.provisioning.index', compact('title'));
+
+        $store = app('currentStore');
+
+        if (!$store) {
+            abort(403, 'Store not selected');
+        }
+
+        // Fetch batches from existing table
+        $batches = DeviceProvisioning::where('store', $store->store_name)
+            ->select(
+                'batch_id',
+                DB::raw('MIN(status) as status'),
+                DB::raw('MIN(device_type) as device_type'),
+                DB::raw('MIN(manufacturer) as manufacturer'),
+                DB::raw('MIN(model) as model'),
+                DB::raw('MIN(imei) as imei'),
+                DB::raw('MIN(serial) as serial'),
+                DB::raw('MIN(user_name) as user'),
+                DB::raw('MIN(date) as date'),
+                DB::raw('MIN(time) as time')
+            )
+            ->groupBy('batch_id')
+            ->orderBy('date', 'desc')
+            ->get()
+            ->map(function ($batch) use ($store) {
+
+                $isPending = $batch->status === 'pending';
+
+                return [
+                    'id' => $batch->batch_id,
+                    'status' => $isPending
+                        ? 'Pending Initial Verification'
+                        : 'Device Provisioned',
+
+                    'status_class' => $isPending
+                        ? 'pending'
+                        : 'provisioned',
+
+                    'manufacturer' => $batch->manufacturer ?? '-',
+                    'model' => $batch->model ?? '-',
+                    'imei' => $batch->imei,
+                    'serial' => $batch->serial ?? '-',
+                    'store' => 'Site ' . $store->id,
+                    'user' => $batch->user,
+                    'date' => $batch->date,
+                    'time' => $batch->time,
+                ];
+            });
+
+        return view('tenant.provisioning.index', compact('title', 'batches'));
     }
 
     /**
@@ -154,6 +204,25 @@ class CoreController extends Controller
     {
         return view('tenant.provisioning.create');
     }
+
+    public function deviceProvisioningVerify($batch)
+    {
+        $devices = DeviceProvisioning::where('batch_id', $batch)
+            ->where('status', 'pending')
+            ->get();
+
+        return view('tenant.provisioning.verify', compact('devices', 'batch'));
+    }
+
+    public function verifyProvisionedDevice($id)
+    {
+        DeviceProvisioning::where('id', $id)->update([
+            'status' => 'verified'
+        ]);
+
+        return back()->with('success', 'Device verified successfully');
+    }
+
 
     public function deviceProvisioningStore(Request $request, $tenant_domain)
     {
@@ -168,6 +237,7 @@ class CoreController extends Controller
             DeviceProvisioning::create([
                 'batch_id' => $batchId,
                 'status' => 'pending',
+                'device_type'  => $item['deviceType'],
                 'manufacturer' => null, // to be filled by api or other method
                 'model' => null, // to be filled by api or other method
                 'imei' => $item['imei'],
