@@ -153,7 +153,7 @@
 @push('script')
     <script>
         let devices = [];
-
+    
         const deviceForm = document.getElementById('deviceForm');
         const deviceTableBody = document.querySelector('#deviceTable tbody');
         const continueBtn = document.getElementById('continueBtn');
@@ -218,72 +218,75 @@
         });
 
         function updateDevicesTable() {
-            deviceTableBody.innerHTML = '';
+        deviceTableBody.innerHTML = '';
 
-            if (devices.length === 0) {
-                deviceTableBody.innerHTML = `
-                                                                                                                                                        <tr id="noDataRow">
-                                                                                                                                                            <td colspan="5" class="text-center text-muted py-4">No devices added yet.</td>
-                                                                                                                                                        </tr>
-                                                                                                                                                    `;
-                return;
-            }
-
-            devices.forEach(device => {
-                const tr = document.createElement('tr');
-                tr.setAttribute('data-device-id', device.id);
-
-                tr.innerHTML = `
-                                                                                                                                                        <td>
-                                                                                                                                                            <div class="btn-group btn-group-sm">
-                                                                                                                                                                <button type="button" class="btn btn-outline-primary edit-btn" title="Edit">
-                                                                                                                                                                    <i class="fas fa-edit"></i>
-                                                                                                                                                                </button>
-                                                                                                                                                                <button type="button" class="btn btn-outline-danger delete-btn" title="Delete">
-                                                                                                                                                                    <i class="fas fa-trash"></i>
-                                                                                                                                                                </button>
-                                                                                                                                                            </div>
-                                                                                                                                                        </td>
-                                                                                                                                                        <td>${device.deviceType}</td>
-                                                                                                                                                        <td>${device.imei}</td>
-                                                                                                                                                        <td>${device.serialNumber || '--'}</td>
-                                                                                                                                                        <td>
-                                                                                                                                                            <span class="status-badge status-pending">${device.status}</span>
-                                                                                                                                                        </td>
-                                                                                                                                                    `;
-
-                deviceTableBody.appendChild(tr);
-
-                tr.querySelector('.delete-btn').addEventListener('click', () => {
-                    deleteDevice(device.id);
-                });
-
-                tr.querySelector('.edit-btn').addEventListener('click', () => {
-                    editDevice(device.id);
-                });
-            });
+        if (devices.length === 0) {
+            deviceTableBody.innerHTML = `
+                <tr id="noDataRow">
+                    <td colspan="5" class="text-center text-muted py-4">
+                        No devices added yet.
+                    </td>
+                </tr>
+            `;
+            return;
         }
+
+        devices.forEach(device => {
+            const tr = document.createElement('tr');
+
+            tr.innerHTML = `
+                <td>
+                    <button class="btn btn-sm btn-outline-primary me-1"
+                            onclick="editDevice(${device.id})">
+                        <i class="far fa-edit"></i>
+                    </button>
+
+                    <button class="btn btn-sm btn-outline-danger"
+                            onclick="deleteDevice(${device.id})">
+                        <i class="far fa-trash-alt"></i>
+                    </button>
+                </td>
+
+                <td>${device.deviceType}</td>
+                <td>${device.imei}</td>
+                <td>${device.serialNumber || '--'}</td>
+                <td>
+                    <span class="status-badge status-pending">
+                        ${device.status}
+                    </span>
+                </td>
+            `;
+
+            deviceTableBody.appendChild(tr);
+        });
+    }
+
 
         function deleteDevice(deviceId) {
-            if (confirm('Are you sure you want to remove this device?')) {
-                devices = devices.filter(device => device.id !== deviceId);
-                updateDevicesTable();
-                updateActionButtons();
-            }
+            if (!confirm('Remove this device?')) return;
+
+            devices = devices.filter(d => d.id !== deviceId);
+            updateDevicesTable();
+            updateActionButtons();
         }
+
+
 
         function editDevice(deviceId) {
             const device = devices.find(d => d.id === deviceId);
-            if (device) {
-                document.getElementById('deviceType').value = device.deviceType;
-                document.getElementById('imeiInput').value = device.imei;
-                document.getElementById('snInput').value = device.serialNumber;
+            if (!device) return;
 
-                devices = devices.filter(d => d.id !== deviceId);
-                updateDevicesTable();
-                updateActionButtons();
-            }
+            document.getElementById('deviceType').value = device.deviceType;
+            document.getElementById('imeiInput').value = device.imei;
+            document.getElementById('snInput').value = device.serialNumber;
+
+            // Remove old record
+            devices = devices.filter(d => d.id !== deviceId);
+
+            updateDevicesTable();
+            updateActionButtons();
         }
+
 
         function updateActionButtons() {
             const hasDevices = devices.length > 0;
@@ -320,7 +323,7 @@
 
             sessionStorage.setItem('provisioningDevices', JSON.stringify(devices));
             // window.location.href = '/provisioning/verify';
-            window.location.href = "{{ tenant_route('tenant.device.verify', ['batch' => '__BATCH__']) }}".replace('__BATCH__', batchId);
+            // window.location.href = "{{ tenant_route('tenant.device.verify', ['batch' => '__BATCH__']) }}".replace('__BATCH__', batchId);
         });
 
         window.addEventListener('load', function () {

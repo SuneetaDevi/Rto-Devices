@@ -37,6 +37,13 @@ class CoreController extends Controller
         return view('tenant.devicemgmt');
     }
 
+    public function editDevice($id)
+    {
+        $device = DeviceProvisioning::findOrFail($id);
+        return view('tenant.provisioning.edit', compact('device'));
+    }
+
+
     /**
      * Display the Inventory page.
      */
