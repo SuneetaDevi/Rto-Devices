@@ -232,33 +232,35 @@ class CoreController extends Controller
 
 
     public function deviceProvisioningStore(Request $request, $tenant_domain)
-    {
-        $request->validate([
-            'store' => 'required|string|max:100',
-            'devices' => 'required',
+{
+    $request->validate([
+        'store' => 'required|string|max:100',
+        'devices' => 'required',
+    ]);
+
+    $devices = json_decode($request->devices, true);
+    $batchId = strtoupper(Str::random(8));
+
+    foreach ($devices as $item) {
+        DeviceProvisioning::create([
+            'batch_id'     => $batchId,
+            'status'       => 'pending',
+            'device_type'  => $item['deviceType'],
+            'manufacturer' => null,
+            'model'        => null,
+            'imei'         => $item['imei'],
+            'serial'       => $item['serialNumber'] ?? null,
+            'store'        => app('currentStore')->store_name,
+            'user_name'    => auth()->user()->name,
+            'date'         => now()->toDateString(),
+            'time'         => now()->format('H:i:s'), // ✅ FIXED FORMAT
         ]);
-
-        $devices = json_decode($request->devices, true);
-        $batchId = strtoupper(Str::random(8));
-        foreach ($devices as $item) {
-            DeviceProvisioning::create([
-                'batch_id' => $batchId,
-                'status' => 'pending',
-                'device_type'  => $item['deviceType'],
-                'manufacturer' => null, // to be filled by api or other method
-                'model' => null, // to be filled by api or other method
-                'imei' => $item['imei'],
-                'serial' => $item['serialNumber'] ?? null,
-                'store' => app('currentStore')->store_name,
-                'user_name' => auth()->user()->name,
-                'date' => now()->toDateString(),
-                'time' => now()->format('H:i:s'),
-            ]);
-        }
-
-        return redirect()
-            ->route('tenant.device-provisioning', $tenant_domain)
-            ->with('success', 'Devices submitted for provisioning.');
     }
+
+    return redirect()
+        ->route('tenant.device-provisioning', $tenant_domain)
+        ->with('success', 'Devices submitted for provisioning.');
+}
+
 
 }
