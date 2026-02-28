@@ -160,22 +160,49 @@
         const nextBtn = document.getElementById('nextBtn');
 
         document.addEventListener('DOMContentLoaded', function () {
-            updateActionButtons();
-        });
-        const nImeiInput = document.getElementById('imeiInput');
 
-        nImeiInput.addEventListener('input', function () {
-            const imei = imeiInput.value.trim();
-            const imeiRegex = /^[0-9]{15,16}$/; // only 15–16 digits
+    updateActionButtons();
 
-            if (!imeiRegex.test(imei)) {
-                // Invalid → red border
-                imeiInput.style.border = "2px solid red";
-            } else {
-                // Valid → normal border
-                imeiInput.style.border = "";
+    const imeiInput = document.getElementById('imeiInput');
+
+    if (!imeiInput) return;
+
+    function isValidImei(imei) {
+        if (!/^\d{15}$/.test(imei)) return false;
+
+        let sum = 0;
+
+        for (let i = 0; i < imei.length; i++) {
+            let digit = parseInt(imei.charAt(i));
+
+            if ((imei.length - i) % 2 === 0) {
+                digit *= 2;
+                if (digit > 9) digit -= 9;
             }
-        });
+
+            sum += digit;
+        }
+
+        return sum % 10 === 0;
+    }
+
+    imeiInput.addEventListener('input', function () {
+        const imei = imeiInput.value.trim();
+
+        if (imei.length === 0) {
+            imeiInput.style.border = "";
+            return;
+        }
+
+        if (isValidImei(imei)) {
+            imeiInput.style.border = "2px solid green";
+        } else {
+            imeiInput.style.border = "2px solid red";
+        }
+    });
+
+});
+
 
 
         deviceForm.addEventListener('submit', function (e) {

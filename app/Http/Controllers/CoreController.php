@@ -36,6 +36,33 @@ class CoreController extends Controller
     {
         return view('tenant.devicemgmt');
     }
+    
+    private function isValidImei($imei)
+    {
+        if (!preg_match('/^\d{15}$/', $imei)) {
+            return false;
+        }
+    
+        $sum = 0;
+        $length = strlen($imei);
+    
+        for ($i = 0; $i < $length; $i++) {
+            $digit = (int) $imei[$i];
+    
+            if (($length - $i) % 2 === 0) {
+                $digit *= 2;
+                if ($digit > 9) {
+                    $digit -= 9;
+                }
+            }
+    
+            $sum += $digit;
+        }
+    
+        return $sum % 10 === 0;
+    }
+
+
 
     public function editDevice($id)
     {
@@ -232,30 +259,38 @@ class CoreController extends Controller
 
 
     public function deviceProvisioningStore(Request $request, $tenant_domain)
-{
-    $request->validate([
-        'store' => 'required|string|max:100',
-        'devices' => 'required',
-    ]);
-
-    $devices = json_decode($request->devices, true);
-    $batchId = strtoupper(Str::random(8));
-
-    foreach ($devices as $item) {
+    {
+        $request->validate([
+            'store' => 'required|string|max:100',
+            'devices' => 'required',
+        ]);
+    
+        $devices = json_decode($request->devices, true);
+        $batchId = strtoupper(Str::random(8));
+    
+        foreach ($devices as $item) {
+    
+        if (!$this->isValidImei($item['imei'])) {
+            return back()->withErrors([
+                'imei' => 'Invalid IMEI number detected in batch.'
+            ]);
+        }
+    
         DeviceProvisioning::create([
-            'batch_id'     => $batchId,
-            'status'       => 'pending',
-            'device_type'  => $item['deviceType'],
+            'batch_id' => $batchId,
+            'status' => 'pending',
+            'device_type' => $item['deviceType'],
             'manufacturer' => null,
-            'model'        => null,
-            'imei'         => $item['imei'],
-            'serial'       => $item['serialNumber'] ?? null,
-            'store'        => app('currentStore')->store_name,
-            'user_name'    => auth()->user()->name,
-            'date'         => now()->toDateString(),
-            'time'         => now()->format('H:i:s'), // ✅ FIXED FORMAT
+            'model' => null,
+            'imei' => $item['imei'],
+            'serial' => $item['serialNumber'] ?? null,
+            'store' => app('currentStore')->store_name,
+            'user_name' => auth()->user()->name,
+            'date' => now()->toDateString(),
+            'time' => now()->format('H:i:s'),
         ]);
     }
+
 
     return redirect()
         ->route('tenant.device-provisioning', $tenant_domain)
